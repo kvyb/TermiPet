@@ -208,6 +208,17 @@ public enum AppTextKey: String, CaseIterable, Sendable {
     case skinDarkDesc
     case skinPixelDesc
     case chatInputPlaceholder
+    case chatTabPet
+    case chatTabColleague
+    case colleagueEnable
+    case colleagueDisclosure
+    case colleagueEmpty
+    case colleagueReplyPlaceholder
+    case colleagueReplyFailed
+    case colleagueSaveFailed
+    case colleagueReplyTo
+    case colleagueNotOwner
+    case colleagueStateCorrupt
     case petImportedSection
     case petButtonChoose
     case petButtonChosen
@@ -462,6 +473,17 @@ public struct AppLocalizer: Sendable, Equatable {
             .skinDarkDesc: "低亮度夜间面板",
             .skinPixelDesc: "硬边框、像素感",
             .chatInputPlaceholder: "说点什么…",
+            .chatTabPet: "宠物",
+            .chatTabColleague: "同事",
+            .colleagueEnable: "同事评论",
+            .colleagueDisclosure: "同事评论会把今天 Pi 会话（~/.pi/agent/sessions）中经过启发式脱敏的摘录发到 api.lessthanthreeai.com，每 20-40 分钟最多一次；只有最近 3 小时内有真实用户文字的会话才会入选，每个会话最多评论一次。会话文件路径、会话标题和状态文件只留在本地，但摘录本身就是会话里的文字，仍可能包含文件名、路径和未被识别的密钥。",
+            .colleagueEmpty: "还没有同事评论。只有 Pi 会话有近期活动时才会偶尔出现。",
+            .colleagueReplyPlaceholder: "回复同事…",
+            .colleagueReplyFailed: "同事这次没有回复，稍后再试。",
+            .colleagueSaveFailed: "设置保存失败，已保持原状。",
+            .colleagueReplyTo: "回复 %@",
+            .colleagueNotOwner: "同事评论由另一个 TermiPet 实例负责，这个窗口无法修改或发送。关掉那个实例后重启 TermiPet 即可接管。",
+            .colleagueStateCorrupt: "同事状态文件无法读取。请修复或删除 ~/Library/Application Support/TermiPet/pi-colleague.json，然后重启 TermiPet。",
             .petImportedSection: "已导入宠物",
             .petButtonChoose: "选择",
             .petButtonChosen: "已选择",
@@ -699,6 +721,17 @@ public struct AppLocalizer: Sendable, Equatable {
             .skinDarkDesc: "低亮度夜間面板",
             .skinPixelDesc: "硬邊框、像素感",
             .chatInputPlaceholder: "說點什麼…",
+            .chatTabPet: "寵物",
+            .chatTabColleague: "同事",
+            .colleagueEnable: "同事評論",
+            .colleagueDisclosure: "同事評論會把今天 Pi 工作階段（~/.pi/agent/sessions）中經啟發式去識別的摘錄傳到 api.lessthanthreeai.com，每 20-40 分鐘最多一次；只有最近 3 小時內有真實使用者文字的工作階段才會入選，每個工作階段最多評論一次。工作階段檔案路徑、標題與狀態檔只留在本機，但摘錄本身就是工作階段裡的文字，仍可能包含檔名、路徑與未被識別的密鑰。",
+            .colleagueEmpty: "還沒有同事評論。只有 Pi 工作階段有近期活動時才會偶爾出現。",
+            .colleagueReplyPlaceholder: "回覆同事…",
+            .colleagueReplyFailed: "同事這次沒有回覆，請稍後再試。",
+            .colleagueSaveFailed: "設定儲存失敗，已保持原狀。",
+            .colleagueReplyTo: "回覆 %@",
+            .colleagueNotOwner: "同事評論由另一個 TermiPet 實例負責，這個視窗無法修改或傳送。關掉該實例後重新啟動 TermiPet 即可接管。",
+            .colleagueStateCorrupt: "同事狀態檔無法讀取。請修復或刪除 ~/Library/Application Support/TermiPet/pi-colleague.json，然後重新啟動 TermiPet。",
             .petImportedSection: "已匯入寵物",
             .petButtonChoose: "選擇",
             .petButtonChosen: "已選擇",
@@ -936,6 +969,17 @@ public struct AppLocalizer: Sendable, Equatable {
             .skinDarkDesc: "Low-luminance night panel",
             .skinPixelDesc: "Hard border, pixel feel",
             .chatInputPlaceholder: "Say something…",
+            .chatTabPet: "Pet",
+            .chatTabColleague: "Colleague",
+            .colleagueEnable: "Colleague comments",
+            .colleagueDisclosure: "Colleague comments send heuristically redacted excerpts of today's Pi sessions (~/.pi/agent/sessions) to api.lessthanthreeai.com, at most once per 20-40 minutes. Only sessions with real user text in the last 3 hours qualify, and each session is commented on at most once. The session file path, session title and the state file stay local, but the excerpt is text from your own sessions and can still mention file names, paths and unrecognized secrets.",
+            .colleagueEmpty: "No colleague comments yet. They appear occasionally when a Pi session has recent activity.",
+            .colleagueReplyPlaceholder: "Reply to colleague…",
+            .colleagueReplyFailed: "The colleague did not reply this time. Try again later.",
+            .colleagueSaveFailed: "Could not save settings; nothing changed.",
+            .colleagueReplyTo: "Replying to %@",
+            .colleagueNotOwner: "Another TermiPet instance owns colleague comments; this window cannot change or send them. Restart TermiPet to take over.",
+            .colleagueStateCorrupt: "The colleague state file is unreadable. Fix or delete ~/Library/Application Support/TermiPet/pi-colleague.json, then restart TermiPet.",
             .petImportedSection: "Imported Pets",
             .petButtonChoose: "Choose",
             .petButtonChosen: "Selected",
@@ -1173,6 +1217,17 @@ public struct AppLocalizer: Sendable, Equatable {
             .skinDarkDesc: "低輝度ナイトパネル",
             .skinPixelDesc: "硬いボーダー、ピクセル感",
             .chatInputPlaceholder: "何か話す…",
+            .chatTabPet: "ペット",
+            .chatTabColleague: "同僚",
+            .colleagueEnable: "同僚のコメント",
+            .colleagueDisclosure: "同僚のコメントは、今日の Pi セッション（~/.pi/agent/sessions）からヒューリスティックに伏せ字化した抜粋を api.lessthanthreeai.com に送信します（20〜40 分に最大 1 回）。直近 3 時間に実際のユーザー入力があるセッションだけが対象で、各セッションにつき 1 回までです。セッションのファイルパス・タイトル・状態ファイルはローカルに留まりますが、抜粋はセッション内の文章そのもので、ファイル名・パス・未認識の秘密情報を含む可能性があります。",
+            .colleagueEmpty: "まだ同僚のコメントはありません。Pi セッションに最近の活動があるときだけ時々届きます。",
+            .colleagueReplyPlaceholder: "同僚に返信…",
+            .colleagueReplyFailed: "今回は返信がありませんでした。あとでもう一度お試しください。",
+            .colleagueSaveFailed: "設定を保存できませんでした。変更は反映されていません。",
+            .colleagueReplyTo: "%@ への返信",
+            .colleagueNotOwner: "同僚コメントは別の TermiPet インスタンスが担当しています。このウィンドウからは変更も送信もできません。引き継ぐには TermiPet を再起動してください。",
+            .colleagueStateCorrupt: "同僚の状態ファイルを読み取れません。~/Library/Application Support/TermiPet/pi-colleague.json を修復または削除して、TermiPet を再起動してください。",
             .petImportedSection: "インポート済みペット",
             .petButtonChoose: "選択",
             .petButtonChosen: "選択済み",
@@ -1410,6 +1465,17 @@ public struct AppLocalizer: Sendable, Equatable {
             .skinDarkDesc: "저휘도 야간 패널",
             .skinPixelDesc: "단단한 테두리, 픽셀 느낌",
             .chatInputPlaceholder: "무언가 말해보세요…",
+            .chatTabPet: "펫",
+            .chatTabColleague: "동료",
+            .colleagueEnable: "동료 코멘트",
+            .colleagueDisclosure: "동료 코멘트는 오늘의 Pi 세션(~/.pi/agent/sessions)에서 휴리스틱으로 가린 발췌를 api.lessthanthreeai.com으로 보냅니다(20-40분에 최대 1회). 최근 3시간 내 실제 사용자 입력이 있는 세션만 대상이며, 세션당 최대 1회입니다. 세션 파일 경로, 제목, 상태 파일은 로컬에 남지만, 발췌는 세션의 실제 텍스트이므로 파일 이름, 경로, 인식되지 않은 비밀 정보가 포함될 수 있습니다.",
+            .colleagueEmpty: "아직 동료 코멘트가 없습니다. Pi 세션에 최근 활동이 있을 때만 가끔 나타납니다.",
+            .colleagueReplyPlaceholder: "동료에게 답장…",
+            .colleagueReplyFailed: "이번에는 답장이 없었습니다. 나중에 다시 시도하세요.",
+            .colleagueSaveFailed: "설정을 저장하지 못했습니다. 변경 사항은 적용되지 않았습니다.",
+            .colleagueReplyTo: "%@ 답장",
+            .colleagueNotOwner: "동료 코멘트는 다른 TermiPet 인스턴스가 담당합니다. 이 창에서는 변경하거나 보낼 수 없습니다. 이어받으려면 TermiPet을 다시 시작하세요.",
+            .colleagueStateCorrupt: "동료 상태 파일을 읽을 수 없습니다. ~/Library/Application Support/TermiPet/pi-colleague.json을 고치거나 삭제한 뒤 TermiPet을 다시 시작하세요.",
             .petImportedSection: "가져온 펫",
             .petButtonChoose: "선택",
             .petButtonChosen: "선택됨",

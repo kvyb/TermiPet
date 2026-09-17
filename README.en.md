@@ -111,6 +111,12 @@ Open chat from the floating toolbar and talk to the current pet directly. The pe
   <img src="docs/images/termipet-pet-chat.png" width="430" alt="TermiPet pet chat">
 </p>
 
+### Colleague Comments (optional)
+
+TermiPet can also drop an occasional short remark about your recent Pi work, written as a colleague at a neighboring desk. It is **off by default**: open the chat panel, switch to the **Colleague** tab, and enable it there. Comments arrive one at a time with a randomized 20-40 minute gap (including the first wait), only for Pi sessions that had real user text in the last 3 hours, and at most once per session ID. A red dot on the chat button marks an unread comment, and you can reply inside that session's thread.
+
+While enabled, short heuristically redacted excerpts of recent Pi user/assistant text are sent to `api.lessthanthreeai.com` (no API key, unique per-request `x-session-id` tag). The session file path, session title and the state file stay local, but the excerpt is text from your own sessions: it can still mention file names, paths and unrecognized secrets. See [docs/pi-colleague.md](docs/pi-colleague.md) for the exact endpoint, sampling, privacy limits and lifecycle behavior.
+
 ### Floating Toolbar and Usage Card
 
 Hover near the pet to open shortcuts for commands, folders, chat, skins, and Pomodoro. The usage card can show lightweight quota status for Claude Code, Codex, and GitHub Copilot.
@@ -130,6 +136,7 @@ TermiPet runs locally on your Mac and **does not provide its own cloud relay ser
 | Local Ollama chat | Sent to the local Ollama service on your Mac. |
 | OpenAI / Gemini / custom API chat | Sent only to the provider endpoint you configured. TermiPet does not proxy requests. |
 | Claude Code / Codex usage reading | Uses local credentials or local config to request official endpoints directly from your Mac. |
+| Pi colleague comments (optional, off by default) | Heuristically redacted excerpts of recent Pi session text are sent to the owner-run `api.lessthanthreeai.com` endpoint only while the Colleague tab switch is on. Session file paths, session titles and the state file stay local; the excerpt itself is session text and can still contain file names, paths or unrecognized secrets. See [docs/pi-colleague.md](docs/pi-colleague.md). |
 | Claude Code Hook status | Sent only to TermiPet's local `127.0.0.1` service for updating pet state. |
 | Terminal preview and quick input | Uses macOS Accessibility permission locally to identify windows and input commands. |
 
@@ -519,6 +526,7 @@ Common files:
 | `config.json` | Quick command configuration |
 | `personality.json` | Pet personality configuration |
 | `ollama-config.json` | Model source, Base URL, and model name |
+| `pi-colleague.json` | Colleague comments switch, cadence schedule, and per-session receipts (IDs and status only) |
 | `selected-pet.json` | Path of the selected pet folder |
 | `ImportedPets/` | Imported pet packages |
 

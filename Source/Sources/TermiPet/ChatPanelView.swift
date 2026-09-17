@@ -96,7 +96,7 @@ struct PetChatView: View {
     }
 }
 
-private struct BubbleRow: View {
+struct BubbleRow: View {
     let message: ChatMessage
 
     var body: some View {

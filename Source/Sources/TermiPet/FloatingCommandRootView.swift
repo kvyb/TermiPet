@@ -12,6 +12,7 @@ struct FloatingCommandRootView: View {
     @ObservedObject var pomodoro: PomodoroTimer
     let commandPanelController: CommandPanelController
     @ObservedObject var chatStore: ChatStore
+    @ObservedObject var colleague: PiColleagueController
     let petWindow: @MainActor () -> NSWindow?
     let inputText: @MainActor (String) -> Void
     let handleApproval: @MainActor (ApprovalPrompt, ApprovalAction) -> Bool
@@ -29,6 +30,7 @@ struct FloatingCommandRootView: View {
     @State private var commandPanelPinned = false
     @State private var chatExpanded = false
     @State private var chatInput = ""
+    @State private var chatMode: ChatMode = .pet
     @State private var hoverVisibility = HoverVisibilityController()
     @State private var collapseTask: Task<Void, Never>?
     @State private var petActionPreview = PetActionPreviewController()
@@ -58,6 +60,7 @@ struct FloatingCommandRootView: View {
         pomodoro: PomodoroTimer,
         commandPanelController: CommandPanelController,
         chatStore: ChatStore,
+        colleague: PiColleagueController,
         petWindow: @escaping @MainActor () -> NSWindow?,
         inputText: @escaping @MainActor (String) -> Void,
         handleApproval: @escaping @MainActor (ApprovalPrompt, ApprovalAction) -> Bool,
@@ -79,6 +82,7 @@ struct FloatingCommandRootView: View {
         self.pomodoro = pomodoro
         self.commandPanelController = commandPanelController
         self.chatStore = chatStore
+        self.colleague = colleague
         self.petWindow = petWindow
         self.inputText = inputText
         self.handleApproval = handleApproval
@@ -231,17 +235,37 @@ struct FloatingCommandRootView: View {
 
     private var chatOverlay: some View {
         VStack(alignment: .leading, spacing: 0) {
-            PetChatView(
-                chatStore: chatStore,
-                inputText: $chatInput,
-                personality: PetPersonalityStore().load(),
-                modelConfig: PetChatModelConfigStore().load(),
-                onClose: { chatExpanded = false },
-                localizer: localizer
-            )
-            .padding(12)
+            Picker("", selection: $chatMode) {
+                Text(localizer[.chatTabPet]).tag(ChatMode.pet)
+                Text(localizer[.chatTabColleague]).tag(ChatMode.colleague)
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .padding(.horizontal, 12)
+            .padding(.top, 12)
+
+            switch chatMode {
+            case .pet:
+                PetChatView(
+                    chatStore: chatStore,
+                    inputText: $chatInput,
+                    personality: PetPersonalityStore().load(),
+                    modelConfig: PetChatModelConfigStore().load(),
+                    onClose: { chatExpanded = false },
+                    localizer: localizer
+                )
+                .padding(12)
+            case .colleague:
+                ColleaguePanelView(controller: colleague, localizer: localizer)
+                    .padding(12)
+            }
         }
         .glassPanel(cornerRadius: 18, shadowRadius: 18, shadowY: 6)
+    }
+
+    /// Unread stays until the user actually views that thread in the panel.
+    private var showsColleagueUnread: Bool {
+        colleague.unreadCount > 0
     }
 
     private var panelTransition: AnyTransition {
@@ -270,10 +294,35 @@ struct FloatingCommandRootView: View {
                     countdownBadge
                         .offset(y: -36)
                         .transition(.scale.combined(with: .opacity))
+                } else if showsColleagueUnread {
+                    colleagueBadge
+                        .offset(y: -30)
+                        .transition(.scale.combined(with: .opacity))
                 }
             }
             .animation(Self.popSpring, value: pomodoro.isActive)
+            .animation(Self.popSpring, value: showsColleagueUnread)
             .contentShape(Rectangle())
+    }
+
+    private var colleagueBadge: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "bubble.left.fill")
+                .font(.system(size: 10, weight: .bold))
+            if colleague.unreadCount > 1 {
+                Text("\(colleague.unreadCount)")
+                    .font(.system(size: 11, weight: .bold, design: .monospaced))
+            }
+        }
+        .foregroundStyle(.primary)
+        .padding(.horizontal, 9)
+        .padding(.vertical, 4)
+        .background(.ultraThinMaterial, in: Capsule())
+        .overlay(
+            Capsule().strokeBorder(Color.red.opacity(0.55), lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.18), radius: 6, y: 2)
+        .fixedSize()
     }
 
     private var countdownBadge: some View {
@@ -332,6 +381,14 @@ struct FloatingCommandRootView: View {
                 toggleChatPanel()
             } label: {
                 launcherIcon("bubble.left.and.bubble.right.fill", isActive: chatExpanded)
+                    .overlay(alignment: .topTrailing) {
+                        if showsColleagueUnread {
+                            Circle()
+                                .fill(Color.red)
+                                .frame(width: 6, height: 6)
+                                .offset(x: 3, y: -3)
+                        }
+                    }
             }
             .buttonStyle(PressableScaleButtonStyle())
             .help(localizer[.tooltipChatWithPet])
@@ -960,4 +1017,9 @@ private struct PetActionButton: Identifiable {
     var title: String
     var icon: String
     var index: Int
+}
+
+private enum ChatMode: String, CaseIterable {
+    case pet
+    case colleague
 }

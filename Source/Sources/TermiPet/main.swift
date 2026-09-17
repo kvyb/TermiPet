@@ -25,6 +25,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private let pomodoroTimer = PomodoroTimer()
     private let commandPanelController = CommandPanelController()
     private let chatStore = ChatStore()
+    private let colleagueController = PiColleagueController()
     private let language = AppLanguageStore().load()
     private let configurationRefresh = CommandConfigurationRefresh()
 
@@ -59,6 +60,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         startWorkspaceObservers()
         startPreviewTimer()
         startAgentSubsystems()
+        colleagueController.start()
         refreshPanelVisibility()
     }
 
@@ -68,6 +70,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         }
         hookServer.stop()
         jsonlWatcher.stop()
+        colleagueController.stop()
     }
 
     private func makeRootView() -> FloatingCommandRootView {
@@ -81,6 +84,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             pomodoro: pomodoroTimer,
             commandPanelController: commandPanelController,
             chatStore: chatStore,
+            colleague: colleagueController,
             petWindow: { [weak self] in self?.panel },
             inputText: { [weak inputController] text in
                 inputController?.insert(text)
